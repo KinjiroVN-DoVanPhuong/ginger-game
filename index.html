@@ -213,12 +213,40 @@
         const ctx = canvas.getContext('2d');
         const brushSizeInput = document.getElementById('brushSize');
         const sizeValue = document.getElementById('sizeValue');
-
+          // Danh sách ảnh trong thư mục img/
+        const images = [
+          'img/1.png',
+          'img/2.png',
+          'img/3.png',
+          'img/4.png',
+          'img/5.png'
+        ];
         let isDrawing = false;
         let currentColor = '#FF0000';
         let brushSize = 15;
         let isEraser = false;
 
+
+      let currentIndex = 0;
+
+      function drawImageOnCanvas(path) {
+        const img = new Image();
+        img.src = path;
+        img.onload = function () {
+          // Xóa canvas trước
+          ctx.clearRect(0, 0, canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
+    
+          // Vẽ ảnh
+          ctx.drawImage(img, 0, 0, canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
+        };
+      }
+    
+      function nextImage() {
+        drawImageOnCanvas(images[currentIndex]);
+        currentIndex = (currentIndex + 1) % images.length; // quay vòng khi hết
+      }
         // Hàm resize canvas theo kích thước container
         function resizeCanvas() {
             const container = document.querySelector('.canvas-container');
@@ -231,7 +259,8 @@
             ctx.fillStyle = 'white';
             ctx.fillRect(0, 0, rect.width, rect.height); // Khởi tạo nền trắng
         }
-
+        // load ảnh đầu tiên khi mở trang
+          nextImage();
         // Gọi resize khi tải trang hoặc resize
         window.addEventListener('resize', () => {
             resizeCanvas();
